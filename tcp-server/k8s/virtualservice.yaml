@@ -1,0 +1,18 @@
+apiVersion: networking.istio.io/v1alpha3
+kind: VirtualService
+metadata:
+  name: tcp-server-vs
+  namespace: tcp-server
+spec:
+  hosts:
+  - "*"
+  gateways:
+  - tcp-server-gateway
+  tcp:
+  - match:
+    - port: 5000
+    route:
+    - destination:
+        host: tcp-server-svc.tcp-server.svc.cluster.local
+        port:
+          number: 5000

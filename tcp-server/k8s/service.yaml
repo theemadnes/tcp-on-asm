@@ -1,0 +1,13 @@
+apiVersion: v1
+kind: Service
+metadata:
+  name: tcp-server-svc
+  namespace: tcp-server
+spec:
+  ports:
+  - port: 5000
+    targetPort: 5000
+    name: tcp # adding for Istio
+  selector:
+    app: "tcp-server"
+  type: LoadBalancer

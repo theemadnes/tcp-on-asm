@@ -1,0 +1,23 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: tcp-server
+  namespace: tcp-server
+spec:
+  replicas: 3
+  selector:
+    matchLabels:
+      app: tcp-server
+  template:
+    metadata:
+      labels:
+        app: tcp-server
+        version: v1
+    spec:
+      serviceAccountName: tcp-server-ksa
+      containers:
+      - name: tcp-server
+        image: gcr.io/alexmattson-scratch/tcp-on-asm-server:v1.0.0
+        ports:
+          - name: tcp
+            containerPort: 5000

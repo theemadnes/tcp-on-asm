@@ -1,0 +1,46 @@
+apiVersion: install.istio.io/v1alpha1
+kind: IstioOperator
+spec:
+  components:
+    ingressGateways:
+      - name: istio-ingressgateway
+        enabled: true
+        k8s:
+          service:
+            ports:
+            - name: status-port
+              port: 15021
+              protocol: TCP
+              targetPort: 15021
+            - name: http2
+              port: 80
+              protocol: TCP
+              targetPort: 8080
+            - name: https
+              port: 443
+              protocol: TCP
+              targetPort: 8443
+            - name: tcp-istiod
+              port: 15012
+              protocol: TCP
+              targetPort: 15012
+            - name: tls
+              port: 15443
+              protocol: TCP
+              targetPort: 15443
+            - name: tcp-2000
+              port: 2000
+              protocol: TCP
+              targetPort: 2000
+            - name: tcp-2001
+              port: 2001
+              protocol: TCP
+              targetPort: 2001
+            - name: tcp-5000
+              port: 5000
+              protocol: TCP
+              targetPort: 5000
+            - name: tcp-5001
+              port: 5001
+              protocol: TCP
+              targetPort: 5001
