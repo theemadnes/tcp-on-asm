@@ -20,43 +20,43 @@ also, in `tcp-client/client.py`, update the IP address to reflect your ingress g
 ```bash
 $ for i in {1..10}; do python3 tcp-client/client.py; done
 connecting to 34.67.100.153 port 5000
-sending b'ping to server alexmattson-macbookpro2.roam.corp.google.com:5000'
+sending b'ping to server 34.67.100.153:5000'
 received b'pong from tcp-server-6db4755594-7sldk'
 closing socket
 connecting to 34.67.100.153 port 5000
-sending b'ping to server alexmattson-macbookpro2.roam.corp.google.com:5000'
+sending b'ping to server 34.67.100.153:5000'
+received b'pong from tcp-server-6db4755594-7sldk'
+closing socket
+connecting to 34.67.100.153 port 5000
+sending b'ping to server 34.67.100.153:5000'
 received b'pong from tcp-server-6db4755594-4s922'
 closing socket
 connecting to 34.67.100.153 port 5000
-sending b'ping to server alexmattson-macbookpro2.roam.corp.google.com:5000'
+sending b'ping to server 34.67.100.153:5000'
 received b'pong from tcp-server-6db4755594-7sldk'
 closing socket
 connecting to 34.67.100.153 port 5000
-sending b'ping to server alexmattson-macbookpro2.roam.corp.google.com:5000'
-received b'pong from tcp-server-6db4755594-7sldk'
-closing socket
-connecting to 34.67.100.153 port 5000
-sending b'ping to server alexmattson-macbookpro2.roam.corp.google.com:5000'
-received b'pong from tcp-server-6db4755594-bgzwn'
-closing socket
-connecting to 34.67.100.153 port 5000
-sending b'ping to server alexmattson-macbookpro2.roam.corp.google.com:5000'
+sending b'ping to server 34.67.100.153:5000'
 received b'pong from tcp-server-6db4755594-4s922'
 closing socket
 connecting to 34.67.100.153 port 5000
-sending b'ping to server alexmattson-macbookpro2.roam.corp.google.com:5000'
+sending b'ping to server 34.67.100.153:5000'
+received b'pong from tcp-server-6db4755594-bgzwn'
+closing socket
+connecting to 34.67.100.153 port 5000
+sending b'ping to server 34.67.100.153:5000'
+received b'pong from tcp-server-6db4755594-4s922'
+closing socket
+connecting to 34.67.100.153 port 5000
+sending b'ping to server 34.67.100.153:5000'
+received b'pong from tcp-server-6db4755594-bgzwn'
+closing socket
+connecting to 34.67.100.153 port 5000
+sending b'ping to server 34.67.100.153:5000'
+received b'pong from tcp-server-6db4755594-bgzwn'
+closing socket
+connecting to 34.67.100.153 port 5000
+sending b'ping to server 34.67.100.153:5000'
 received b'pong from tcp-server-6db4755594-7sldk'
-closing socket
-connecting to 34.67.100.153 port 5000
-sending b'ping to server alexmattson-macbookpro2.roam.corp.google.com:5000'
-received b'pong from tcp-server-6db4755594-bgzwn'
-closing socket
-connecting to 34.67.100.153 port 5000
-sending b'ping to server alexmattson-macbookpro2.roam.corp.google.com:5000'
-received b'pong from tcp-server-6db4755594-bgzwn'
-closing socket
-connecting to 34.67.100.153 port 5000
-sending b'ping to server alexmattson-macbookpro2.roam.corp.google.com:5000'
-received b'pong from tcp-server-6db4755594-bgzwn'
 closing socket
 ```

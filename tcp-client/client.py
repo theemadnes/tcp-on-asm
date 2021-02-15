@@ -18,7 +18,7 @@ sock.connect(server_address)
 try:
 
     # Send data
-    message = bytes('ping to server ' + socket.gethostname() + ':' + str(PORT), 'utf-8')
+    message = bytes('ping to server ' + HOST + ':' + str(PORT), 'utf-8')
     print('sending {!r}'.format(message))
     sock.sendall(message)
 
