@@ -10,4 +10,4 @@ spec:
     name: tcp # adding for Istio
   selector:
     app: "tcp-server"
-  type: LoadBalancer
+  type: ClusterIP

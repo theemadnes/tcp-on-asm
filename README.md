@@ -3,44 +3,60 @@ sample code for a tcp service exposed via an Anthos Service Mesh's ingress gatew
 
 this walkthrough exposes a TCP-based service on a non-standard port via ASM's ingress gateway.
 
-## create a cluster and install ASM
+### setup
 
-```gcloud beta container --project "alexmattson-scratch" clusters create "asm-test-cluster-01" --zone "us-central1-c" --no-enable-basic-auth --cluster-version "1.17.14-gke.1600" --release-channel "regular" --machine-type "e2-standard-4" --image-type "COS" --disk-type "pd-ssd" --disk-size "100" --metadata disable-legacy-endpoints=true --scopes "https://www.googleapis.com/auth/devstorage.read_only","https://www.googleapis.com/auth/logging.write","https://www.googleapis.com/auth/monitoring","https://www.googleapis.com/auth/servicecontrol","https://www.googleapis.com/auth/service.management.readonly","https://www.googleapis.com/auth/trace.append" --max-pods-per-node "32" --num-nodes "3" --enable-stackdriver-kubernetes --enable-ip-alias --network "projects/alexmattson-scratch/global/networks/default" --subnetwork "projects/alexmattson-scratch/regions/us-central1/subnetworks/default" --default-max-pods-per-node "32" --enable-autoscaling --min-nodes "3" --max-nodes "5" --no-enable-master-authorized-networks --addons HorizontalPodAutoscaling,HttpLoadBalancing --enable-autoupgrade --enable-autorepair --max-surge-upgrade 1 --max-unavailable-upgrade 0 --workload-pool "alexmattson-scratch.svc.id.goog" --node-locations "us-central1-c"
+for this to work through ASM's ingress gateway via a non-standard port, you must add additional an additional port to the ingress gateway service. once you've done this, `istioctl analyze` can confirm that the port you're attempting to use is accessible via the ingress gateway:
+
+```bash
+$ istioctl analyze -n tcp-server
+
+✔ No validation issues found when analyzing namespace: tcp-server.
 ```
 
+also, in `tcp-client/client.py`, update the IP address to reflect your ingress gateway's public IP.
+
+### example usage
+
+```bash
+$ for i in {1..10}; do python3 tcp-client/client.py; done
+connecting to 34.67.100.153 port 5000
+sending b'ping to server alexmattson-macbookpro2.roam.corp.google.com:5000'
+received b'pong from tcp-server-6db4755594-7sldk'
+closing socket
+connecting to 34.67.100.153 port 5000
+sending b'ping to server alexmattson-macbookpro2.roam.corp.google.com:5000'
+received b'pong from tcp-server-6db4755594-4s922'
+closing socket
+connecting to 34.67.100.153 port 5000
+sending b'ping to server alexmattson-macbookpro2.roam.corp.google.com:5000'
+received b'pong from tcp-server-6db4755594-7sldk'
+closing socket
+connecting to 34.67.100.153 port 5000
+sending b'ping to server alexmattson-macbookpro2.roam.corp.google.com:5000'
+received b'pong from tcp-server-6db4755594-7sldk'
+closing socket
+connecting to 34.67.100.153 port 5000
+sending b'ping to server alexmattson-macbookpro2.roam.corp.google.com:5000'
+received b'pong from tcp-server-6db4755594-bgzwn'
+closing socket
+connecting to 34.67.100.153 port 5000
+sending b'ping to server alexmattson-macbookpro2.roam.corp.google.com:5000'
+received b'pong from tcp-server-6db4755594-4s922'
+closing socket
+connecting to 34.67.100.153 port 5000
+sending b'ping to server alexmattson-macbookpro2.roam.corp.google.com:5000'
+received b'pong from tcp-server-6db4755594-7sldk'
+closing socket
+connecting to 34.67.100.153 port 5000
+sending b'ping to server alexmattson-macbookpro2.roam.corp.google.com:5000'
+received b'pong from tcp-server-6db4755594-bgzwn'
+closing socket
+connecting to 34.67.100.153 port 5000
+sending b'ping to server alexmattson-macbookpro2.roam.corp.google.com:5000'
+received b'pong from tcp-server-6db4755594-bgzwn'
+closing socket
+connecting to 34.67.100.153 port 5000
+sending b'ping to server alexmattson-macbookpro2.roam.corp.google.com:5000'
+received b'pong from tcp-server-6db4755594-bgzwn'
+closing socket
 ```
-gcloud beta container hub memberships register asm-test-cluster-01 \
-   --gke-uri=https://container.googleapis.com/v1/projects/alexmattson-scratch/zones/us-central1-c/clusters/asm-test-cluster-01 \
-   --enable-workload-identity
-```
-
-```
-./install_asm \
-  --project_id alexmattson-scratch \
-  --cluster_name asm-test-cluster-01 \
-  --cluster_location us-central1-c \
-  --mode install \
-  --output_dir ./asm-temp \
-  --enable_all \
-  --custom_overlay asm-setup/ig-port-overlay.yaml
-```
-
-## udpate the ingress gateway ports
-
-this is done *after* a bunch of ASM setup previously for a cluster, and my test is on an existing ASM installation 
-
-replace the proper values below based on your config
-
-```
-$ ./install_asm \
-  --project_id alexmattson-scratch \
-  --cluster_name asm-external-whereami-01 \
-  --cluster_location us-central1-c \
-  --mode install \
-  --output_dir ./asm-external-whereami-01 \
-  --enable_all \
-  --custom_overlay ../tcp-on-asm/asm-setup/ig-port-overlay.yaml
-```
-
-^^^ none of this port overlay stuff works - had to edit in GKE console
-
