@@ -5,6 +5,7 @@ import socket
 import sys
 
 HOST = '34.67.100.153'  # The server's hostname or IP address; replace with your ingress gateway IP
+#HOST = '127.0.0.1' # local testing
 PORT = 5000        # The port used by the server
 
 # Create a TCP/IP socket

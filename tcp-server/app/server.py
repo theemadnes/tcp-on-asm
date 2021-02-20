@@ -1,41 +1,38 @@
 #!/usr/bin/env python3
-# based on https://pymotw.com/3/socket/tcp.html
+# based on https://asyncio.readthedocs.io/en/latest/tcp_echo.html
 
 import socket
-import sys
+import asyncio
 
 PORT = 5000        # Port to listen on (non-privileged ports are > 1023)
 
-# Create a TCP/IP socket
-sock = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
+async def handle_echo(reader, writer):
+    data = await reader.read(1024)
+    message = data.decode()
+    addr = writer.get_extra_info('peername')
+    print("Received %r from %r" % (message, addr))
 
-# Bind the socket to the port
-server_address = ('localhost', PORT)
-print('starting up on {} port {}'.format(*server_address))
-sock.bind(server_address)
+    response = 'pong from ' + socket.gethostname()
 
-# Listen for incoming connections
-sock.listen(1)
+    print("Send: %r" % response)
+    writer.write(bytes(response, 'utf-8'))
+    await writer.drain()
 
-while True:
-    # Wait for a connection
-    print('waiting for a connection')
-    connection, client_address = sock.accept()
-    try:
-        print('connection from', client_address)
+    print("Close the client socket")
+    writer.close()
 
-        # Receive the data in small chunks and retransmit it
-        #while True:
-        data = connection.recv(1024)
-        print('received {!r}'.format(data))
-        if data:
-            print('sending response back to the client')
-            response = 'pong from ' + socket.gethostname()
-            connection.sendall(bytes(response, 'utf-8'))
-        else:
-            print('no data from', client_address)
-            break
+loop = asyncio.get_event_loop()
+coro = asyncio.start_server(handle_echo, '127.0.0.1', PORT, loop=loop)
+server = loop.run_until_complete(coro)
 
-    finally:
-        # Clean up the connection
-        connection.close()
+# Serve requests until Ctrl+C is pressed
+print('Serving on {}'.format(server.sockets[0].getsockname()))
+try:
+    loop.run_forever()
+except KeyboardInterrupt:
+    pass
+
+# Close the server
+server.close()
+loop.run_until_complete(server.wait_closed())
+loop.close()

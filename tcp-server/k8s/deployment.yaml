@@ -17,7 +17,7 @@ spec:
       serviceAccountName: tcp-server-ksa
       containers:
       - name: tcp-server
-        image: gcr.io/alexmattson-scratch/tcp-on-asm-server:v1.0.0
+        image: gcr.io/alexmattson-scratch/tcp-on-asm-server:v1.1.0
         ports:
           - name: tcp
             containerPort: 5000
