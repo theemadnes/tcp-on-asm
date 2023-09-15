@@ -1,0 +1,23 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: tcp-client
+  #namespace: tcp-client
+spec:
+  replicas: 2
+  selector:
+    matchLabels:
+      app: tcp-client
+  template:
+    metadata:
+      labels:
+        app: tcp-client
+        version: v1
+    spec:
+      serviceAccountName: tcp-client-ksa
+      containers:
+      - name: tcp-client
+        image: us-central1-docker.pkg.dev/cicd-system-demo-01/cicd-demo-01/tcp-on-asm-client@sha256:b6aad895be8b03989fa3c5aadf5545d486e1ac3efc852be29d7a2f3233e73410
+        #ports:
+        #  - name: tcp
+        #    containerPort: 8888

@@ -1,40 +1,29 @@
-#!/usr/bin/env python3
-# based on https://pymotw.com/3/socket/tcp.html
-
 import socket
-import sys
+import os
+import datetime
+from time import sleep
 
-HOST = '34.67.100.153'  # The server's hostname or IP address; replace with your ingress gateway IP
-#HOST = '127.0.0.1' # local testing
-PORT = 5000        # The port used by the server
+HOST = os.environ.get(key="HOST", default="tcp-server")
+PORT = os.environ.get(key="PORT", default=8888)
 
-# Create a TCP/IP socket
-sock = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
+while True: 
 
-# Connect the socket to the port where the server is listening
-server_address = (HOST, PORT)
-print('connecting to {} port {}'.format(*server_address))
-sock.connect(server_address)
+    try:
+        data = f"hi at {datetime.datetime.now()}"
 
-try:
+        # Create a socket (SOCK_STREAM means a TCP socket)
+        with socket.socket(socket.AF_INET, socket.SOCK_STREAM) as sock:
+            # Connect to server and send data
+            sock.connect((HOST, PORT))
+            sock.sendall(bytes(data + "\n", "utf-8"))
 
-    # Send data
-    message = bytes('ping to server ' + HOST + ':' + str(PORT), 'utf-8')
-    print('sending {!r}'.format(message))
-    sock.sendall(message)
+            # Receive data from the server and shut down
+            received = str(sock.recv(1024), "utf-8")
 
-    # Look for the response
-    #amount_received = 0
-    #amount_expected = len(message)
-    #amount_expected = 64
+        print("Sent:     {}".format(data))
+        print("Received: {}".format(received))
 
-    #while amount_received < amount_expected:
-    #    data = sock.recv(16)
-    #    amount_received += len(data)
-    #    print('received {!r}'.format(data))
-    data = sock.recv(1024)
-    print('received {!r}'.format(data))
+    except:
+        print("Error")
 
-finally:
-    print('closing socket')
-    sock.close()
+    sleep(1)

@@ -2,9 +2,9 @@ apiVersion: apps/v1
 kind: Deployment
 metadata:
   name: tcp-server
-  namespace: tcp-server
+  #namespace: tcp-server
 spec:
-  replicas: 3
+  replicas: 2
   selector:
     matchLabels:
       app: tcp-server
@@ -17,7 +17,7 @@ spec:
       serviceAccountName: tcp-server-ksa
       containers:
       - name: tcp-server
-        image: gcr.io/alexmattson-scratch/tcp-on-asm-server:v1.1.0
+        image: us-central1-docker.pkg.dev/cicd-system-demo-01/cicd-demo-01/tcp-on-asm-server@sha256:2db8f6f9782f35e76ae5215948a287212259f35c3baa7eaba530a22656117d4e
         ports:
           - name: tcp
-            containerPort: 5000
+            containerPort: 8888

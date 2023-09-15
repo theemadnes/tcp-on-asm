@@ -1,38 +1,30 @@
-#!/usr/bin/env python3
-# based on https://asyncio.readthedocs.io/en/latest/tcp_echo.html
+import socketserver
+import os
 
-import socket
-import asyncio
+HOST = os.environ.get(key="HOST", default="0.0.0.0")
+PORT = os.environ.get(key="PORT", default=8888)
 
-PORT = 5000        # Port to listen on (non-privileged ports are > 1023)
+class MyTCPHandler(socketserver.BaseRequestHandler):
+    """
+    The request handler class for our server.
 
-async def handle_echo(reader, writer):
-    data = await reader.read(1024)
-    message = data.decode()
-    addr = writer.get_extra_info('peername')
-    print("Received %r from %r" % (message, addr))
+    It is instantiated once per connection to the server, and must
+    override the handle() method to implement communication to the
+    client.
+    """
 
-    response = 'pong from ' + socket.gethostname()
+    def handle(self):
+        # self.request is the TCP socket connected to the client
+        self.data = self.request.recv(1024).strip()
+        print("{} wrote:".format(self.client_address[0]))
+        print(self.data)
+        # just send back the same data, but upper-cased
+        self.request.sendall(self.data.upper())
 
-    print("Send: %r" % response)
-    writer.write(bytes(response, 'utf-8'))
-    await writer.drain()
+if __name__ == "__main__":
 
-    print("Close the client socket")
-    writer.close()
-
-loop = asyncio.get_event_loop()
-coro = asyncio.start_server(handle_echo, '127.0.0.1', PORT, loop=loop)
-server = loop.run_until_complete(coro)
-
-# Serve requests until Ctrl+C is pressed
-print('Serving on {}'.format(server.sockets[0].getsockname()))
-try:
-    loop.run_forever()
-except KeyboardInterrupt:
-    pass
-
-# Close the server
-server.close()
-loop.run_until_complete(server.wait_closed())
-loop.close()
+    # Create the server, binding to localhost on port 8888
+    with socketserver.TCPServer((HOST, PORT), MyTCPHandler) as server:
+        # Activate the server; this will keep running until you
+        # interrupt the program with Ctrl-C
+        server.serve_forever()
